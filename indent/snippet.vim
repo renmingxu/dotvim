@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: snippets.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 21 Oct 2012.
+" Last Modified: 19 Sep 2011.
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -35,20 +35,18 @@ set cpo&vim
 
 if !exists('b:undo_indent')
     let b:undo_indent = ''
-else
-    let b:undo_indent = '|'
 endif
 
 setlocal indentexpr=SnippetsIndent()
 
-function! SnippetsIndent() "{{{
+function! SnippetsIndent()"{{{
     let line = getline('.')
     let prev_line = (line('.') == 1)? '' : getline(line('.')-1)
 
     if prev_line =~ '^\s*$'
         return 0
-    elseif prev_line =~ '^\%(include\|snippet\|abbr\|prev_word\|delete\|alias\|options\)'
-                \&& line !~ '^\s*\%(include\|snippet\|abbr\|prev_word\|delete\|alias\|options\)'
+    elseif prev_line =~ '^\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
+                \&& line !~ '^\s*\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
         return &shiftwidth
     else
         return match(line, '\S')
@@ -56,7 +54,7 @@ function! SnippetsIndent() "{{{
 endfunction"}}}
 
 let b:undo_indent .= '
-    \ setlocal indentexpr<
+    \ | setlocal indentexpr<
     \'
 
 let &cpo = s:save_cpo
