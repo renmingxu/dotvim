@@ -477,7 +477,7 @@ endtry
 if has('arabic')
   set noarabicshape
 endif
-set wildignore+=*~,*.pyo,__pycache__,.*.swp
+set wildignore+=*~,*.py[co],__pycache__,.*.swp
 " Linux 与 Windows 等 [[[2
 if has("gui_macvim")
   set macmeta
@@ -985,6 +985,7 @@ let tlist_html_settings = 'html;h:Headers;o:IDs;c:Classes'
 let tlist_dosini_settings = 'ini;s:sections'
 let tlist_go_settings = 'go;f:functions;v:variables;d:types'
 let tlist_pgsql_settings = 'pgsql;f:functions;t:tables'
+let tlist_markdown_settings = 'markdown;h:headers'
 hi link MyTagListFileName Type
 "   2html.vim, 使用XHTML格式[[[2
 let use_xhtml = 1
