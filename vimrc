@@ -427,6 +427,8 @@ set expandtab
 set visualbell t_vb=
 " when will this cause problems?
 set ttyfast
+" 不要包含标准错误
+set shellredir=>
 autocmd GUIEnter * set t_vb=
 " ! is for histwin to save tags
 set viminfo='100,:10000,<50,s10,h,!
@@ -1066,7 +1068,7 @@ let xml_use_xhtml = 1
 "   netrw，elinks不行，使用curl吧
 if executable("curl")
   let g:netrw_http_cmd  = "curl"
-  let g:netrw_http_xcmd = "-o"
+  let g:netrw_http_xcmd = "--compressed -o"
 endif
 " cscope setting [[[1
 if has("cscope") && executable("cscope")
