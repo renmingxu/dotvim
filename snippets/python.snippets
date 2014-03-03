@@ -47,6 +47,8 @@ snippet dbg
 snippet cdb
 	from cli import repl
 	repl(locals())
+snippet pdb
+	import pudb; pu.db
 snippet tb
 	import traceback
 	traceback.print_exc()
@@ -62,3 +64,5 @@ snippet fpf
         from __future__ import print_function
 snippet fdiv
         from __future__ import division
+snippet aa
+        *args, **kwargs)

@@ -342,7 +342,7 @@ function Lilydjwg_hexchar()
 endfunction
 "  用火狐打开链接[[[2
 function Lilydjwg_open_url()
-  let s:url = Lilydjwg_get_pattern_at_cursor('\v%(https?://|ftp://|file:/{3}|www\.)%(\w|[.-])+%(:\d+)?%(/%(\w|[~@#$%^&+=/.?:-])*[^,.?:''"-])?')
+  let s:url = Lilydjwg_get_pattern_at_cursor('\v%(https?|ftp)://[^]''" \t\r\n>*。，\`)]*')
   if s:url == ""
     echohl WarningMsg
     echomsg '在光标处未发现URL！'
@@ -797,7 +797,7 @@ let s:cmdwin = 0
 autocmd CmdwinEnter	* let s:cmdwin = 1
 autocmd CmdwinLeave	* let s:cmdwin = 0
 autocmd InsertLeave	* if s:cmdwin == 0 && pumvisible() == 0|pclose|endif
-autocmd BufReadCmd *.maff,*.xmind,*.crx  call zip#Browse(expand("<amatch>"))
+autocmd BufReadCmd *.maff,*.xmind,*.crx,*.apk  call zip#Browse(expand("<amatch>"))
 autocmd BufRead */WualaDrive/* setl noswapfile
 "   见 ft-syntax-omni
 if has("autocmd") && exists("+omnifunc")
