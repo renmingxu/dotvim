@@ -26,12 +26,6 @@ augroup filetypedetect
   au BufNewFile,BufRead *.md				setf markdown
   au BufRead		grub.cfg			setf sh
   au BufRead		$HOME/temp/mb			setf mb
-  au BufRead		lilydjwg.is-programmer.com_edit*		setf html
-  au BufRead		forum.ubuntu.org.cn_*,bbs.archlinuxcn.org_post.php*.txt		setf bbcode
-  au BufRead		*fck_source.html*		setf html
-  au BufRead		*docs.google.com_Doc*		setf html
-  au BufNewFile,BufRead	*.mw,*wpTextbox*.txt,*wiki__text*.txt		setf wiki
-  au BufNewFile,BufRead	*postmore/wiki/*.wiki		setf googlecodewiki
   au BufNewFile,BufRead	*.wiki				setf vimwiki
   au BufNewFile,BufRead $HOME/.vim/dict/*.txt,$VIM/vimfiles/dict/*.txt	setf dict
   au BufNewFile,BufRead fcitx_skin.conf,*/fcitx*.{conf,desc}*,*/fcitx/profile	setf dosini
@@ -54,4 +48,14 @@ augroup filetypedetect
   au BufNewFile,BufRead *.io				setf io
   au BufNewFile,BufRead supervisor*.conf                setf dosini
   au BufRead		*procmaillog			setf mail
+  au BufNewFile,BufRead *.i				setf swig
+
+  " Websites
+  au BufRead		forum.ubuntu.org.cn_*,bbs.archlinuxcn.org_post.php*.txt		setf bbcode
+  au BufRead		*fck_source.html*		setf html
+  au BufRead		*docs.google.com_Doc*		setf html
+  au BufNewFile,BufRead	*postmore/wiki/*.wiki		setf googlecodewiki
+  au BufRead		lilydjwg.is-programmer.com_edit*		setf html
+  au BufNewFile,BufRead	*.mw,*wpTextbox*.txt,*wiki__text*.txt		setf wiki
+  au BufRead		/tmp/segmentfault.com_*-input*	setf markdown
 augroup END

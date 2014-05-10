@@ -624,6 +624,14 @@ elseif has("unix")
     unlet color_insert
     unlet color_exit
   endif
+elseif has('win32') && exists('$CONEMUBUILD')
+  " enable 256 colors in ConEmu on Win
+  set term=xterm
+  set t_Co=256
+  let &t_AB="\e[48;5;%dm"
+  let &t_AF="\e[38;5;%dm"
+  set cursorline
+  exe 'colorscheme' colorscheme
 endif
 unlet colorscheme
 " 不同的 Vim 版本 [[[2
@@ -852,6 +860,8 @@ command -range=% Paste <line1>,<line2>py3 LilyPaste()
 command -range=% Tohtml call Lilydjwg_to_html(<line1>, <line2>)
 command Agg exe 'Ag -Q ' . expand('<cword>')
 " 插件配置[[[1
+"   linediff[[[2
+let g:linediff_buffer_type = 'scratch'
 "   rst_tables[[[2
 let g:rst_tables_no_warning = 1
 "   signify [[[2
