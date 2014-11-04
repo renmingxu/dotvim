@@ -16,6 +16,13 @@ runtime vimrc_example.vim
 "]]]
 " 我的设置
 " 函数[[[1
+"   删除所有未显示且无修改的缓冲区以减少内存占用[[[2
+function Lilydjwg_cleanbufs()
+  for bufNr in filter(range(1, bufnr('$')),
+        \ 'buflisted(v:val) && !bufloaded(v:val)')
+    execute bufNr . 'bdelete'
+  endfor
+endfunction
 "   转成 HTML，只要 pre 标签部分[[[2
 "   http://bootleq.blogspot.com/2012/12/tohtml-html-document-function-tohtmldoc.html
 function Lilydjwg_to_html(line1, line2)
@@ -507,6 +514,9 @@ if has("win32") || has("win64")
   " Win 配置 [[[3
   command FScreen simalt ~x
   command Fscreen simalt ~r
+  if has('directx')
+    set renderoptions=type:directx
+  endif
 else
   " Linux 路径 [[[3
   let g:vimfiles = split(&runtimepath, ',')[0]
@@ -587,7 +597,7 @@ elseif has("unix")
       colorscheme default
       " 在终端下，如果码表存在，则自动加载vimim输入法
       if len(split(globpath(&rtp, 'so/vimim.wubi.txt'), '\n')) > 0
-	runtime so/vimim.vim
+	autocmd VimEnter * runtime so/vimim.vim
       endif
     endif
   endif
@@ -647,9 +657,17 @@ if has("persistent_undo")
   endif
   set undofile
 endif
-if v:version > 702
-  set cryptmethod=blowfish
-endif
+try
+  " Vim 7.4.399+
+  set cryptmethod=blowfish2
+catch /.*/
+  " Vim 7.3+
+  try
+    set cryptmethod=blowfish
+  catch /.*/
+    " Vim 7.2-, neovim
+  endtry
+endtry
 unlet g:undodir
 let g:silent_unsupported = 1
 " map 相关[[[1
@@ -699,9 +717,10 @@ nnoremap wh :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> tra
 nmap <M-m> :MRU 
 " 打开草稿
 nmap <unique> <silent> <M-s> <Plug>ShowScratchBuffer
-for i in range(1, 9)
+for i in range(1, 8)
   exec 'nnoremap <silent> <M-' . i . '> '. i .'gt'
 endfor
+nnoremap <silent> <M-9> :exec "normal!" min([tabpagenr('$'),9])."gt"<CR>
 "     lusty-explorer [[[4
 nmap <M-b> :LustyBufferExplorer<CR>
 nmap <M-g> :LustyBufferGrep<CR>
@@ -805,7 +824,9 @@ let s:cmdwin = 0
 autocmd CmdwinEnter	* let s:cmdwin = 1
 autocmd CmdwinLeave	* let s:cmdwin = 0
 autocmd InsertLeave	* if s:cmdwin == 0 && pumvisible() == 0|pclose|endif
-autocmd BufReadCmd *.maff,*.xmind,*.crx,*.apk  call zip#Browse(expand("<amatch>"))
+"   插入模式下长时间不动则打断撒消序列
+autocmd CursorHoldI * call feedkeys("\<C-g>u", 'nt')
+autocmd BufReadCmd *.maff,*.xmind,*.crx,*.apk,*.whl  call zip#Browse(expand("<amatch>"))
 autocmd BufRead */WualaDrive/* setl noswapfile
 "   见 ft-syntax-omni
 if has("autocmd") && exists("+omnifunc")
@@ -859,7 +880,10 @@ command -nargs=1 -range=% Column <line1>,<line2>Align! w<args>0P1p \S\@<=\s\@=
 command -range=% Paste <line1>,<line2>py3 LilyPaste()
 command -range=% Tohtml call Lilydjwg_to_html(<line1>, <line2>)
 command Agg exe 'Ag -Q ' . expand('<cword>')
+command BufClean call Lilydjwg_cleanbufs()
 " 插件配置[[[1
+"   extradite.vim[[[2
+let g:extradite_showhash = 1
 "   linediff[[[2
 let g:linediff_buffer_type = 'scratch'
 "   rst_tables[[[2
@@ -946,6 +970,7 @@ let g:cycle_default_groups = [
       \ 'Friday', 'Saturday'], 'hard_case', {'name': 'Days'}],
       \ [["enable", "disable"]],
       \ [["add", "remove"]],
+      \ [['up', 'down']],
       \ ]
 "   Erlang[[[2
 let g:erlangHighlightBif = 1
@@ -1040,6 +1065,11 @@ let MRU_Max_Entries = 2000
 let MRU_Exclude_Files = '\v^.*\~$|/COMMIT_EDITMSG$|/itsalltext/|^/tmp/'
 "  加载菜单太耗时
 let MRU_Add_Menu = 0
+let MRU_Filename_Format = {
+    \   'formatter': 'v:val',
+    \   'parser': '.*',
+    \   'syntax': '[^/]\+$'
+    \ }
 "   syntax/haskell.vim[[[2
 let hs_highlight_boolean = 1
 let hs_highlight_types = 1
@@ -1061,8 +1091,8 @@ let g:VEConf_fileHotkey.help = '<F1>'
 let g:VEConf_treeHotkey = {}
 let g:VEConf_treeHotkey.help = '<F1>'
 let g:VEConf_treeHotkey.toggleNode = '<Space>'
-"   VimIm，不要更改弹出菜单的颜色[[[2
-let g:vimim_menu_color = 1
+"   Vimim[[[2
+let g:vimim_map = 'c-bslash,c-space'
 "   vimwiki[[[2
 let g:vimwiki_list = [{'path': '~/.vimwiki/'}]
 let g:vimwiki_camel_case = 0
@@ -1078,7 +1108,7 @@ let xml_use_xhtml = 1
 "   netrw，elinks不行，使用curl吧
 if executable("curl")
   let g:netrw_http_cmd  = "curl"
-  let g:netrw_http_xcmd = "--compressed -o"
+  let g:netrw_http_xcmd = "-L --compressed -o"
 endif
 " cscope setting [[[1
 if has("cscope") && executable("cscope")

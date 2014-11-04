@@ -37,9 +37,11 @@ let s:converter = {
       \}
 
 function! s:converter.filter(context) "{{{
-  let convert_candidates = filter(copy(a:context.candidates),
-        \ "get(v:val, 'neocomplcache__convertable', 1)
-        \  && v:val.word =~ '^\\u\\+$\\|^\\u\\?\\l\\+$'")
+  " disable this; it's annoying
+  return a:context.candidates
+  if !neocomplete#is_text_mode() && !neocomplete#within_comment()
+    return a:context.candidates
+  endif
 
   if a:context.complete_str =~ '^\l\+$'
     for candidate in convert_candidates
