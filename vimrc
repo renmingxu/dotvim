@@ -475,7 +475,7 @@ set nolinebreak
 set nowrapscan
 set scrolloff=5
 set sessionoptions=blank,buffers,curdir,folds,help,options,tabpages,winsize,slash,unix,resize
-set shiftwidth=2
+set shiftwidth=4
 set winaltkeys=no
 set noequalalways
 set listchars=eol:$,tab:>-,nbsp:~
