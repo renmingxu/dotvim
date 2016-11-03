@@ -1,4 +1,4 @@
-我的 Vim 配置。(fork form lilydjwg)
+我的 Vim 配置。(fork from lilydjwg)
 
 Tips
 ====
